@@ -1,0 +1,31 @@
+
+```
+// 查看当前root用户表数据
+mysql> select user,host from user where user='root';
++------+-------------------------+
+| user | host                    |
++------+-------------------------+
+| root | 127.0.0.1               |
+| root | ::1                     |
+| root | iz2ze48xsabxwd411tdl4xz |
+| root | localhost               |
++------+-------------------------+
+4 rows in set (0.00 sec)
+
+// 直接update会报错
+mysql> update user set host=’%’ where user=’root’;
+ERROR 1054 (42S22): Unknown column '’root’' in 'where clause'
+
+// 指定条件将其中一条修改，或者新增插入一条host='%'的数据（允许任意远程客户端连接）
+mysql> update user set host='%' where user='root' and host='iz2ze48xsabxwd411tdl4xz';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+// 授予所有权限
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;
+Query OK, 0 rows affected (0.00 sec)
+
+// 刷新权限数据
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec)
+```
